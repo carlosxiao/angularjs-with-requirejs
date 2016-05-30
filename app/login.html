@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>DevOps 2 | Log in</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.4 -->
+    <link rel="stylesheet" href="/js/lib/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="css/AdminLTE.min.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="lib/html5shiv.min.js"></script>
+        <script src="lib/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body class="login-page">
+    <div class="login-box">
+      <div class="login-logo">
+        <a href="javascript:;"><b>DEV</b>OPS</a>
+      </div><!-- /.login-logo -->
+      <div class="login-box-body">
+        <p class="login-box-msg" id="login-box-msg">Sign in to start your session</p>
+        <form id="loginForm">
+          <div class="form-group has-feedback">
+            <input type="text" name="username" class="form-control" placeholder="Username" >
+            <span class="glyphicon glyphicon-user form-control-feedback"></span>
+          </div>
+          <div class="form-group has-feedback">
+            <input type="password" name="password" id="password" class="form-control" placeholder="Password" >
+            <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+          </div>
+          <div class="row">
+            <div class="col-xs-8">
+              <div class="checkbox icheck">
+                <label>
+                </label>
+              </div>
+            </div><!-- /.col -->
+            <div class="col-xs-4">
+              <button type="button" id="btn_sign_in" class="btn btn-primary btn-block btn-flat">Sign In</button>
+            </div><!-- /.col -->
+          </div>
+        </form>
+      </div><!-- /.login-box-body -->
+    </div><!-- /.login-box -->
+
+    <script src="/js/lib/requirejs/require.js"></script>
+
+    <script type="text/javascript">
+      requirejs.config({
+        baseUrl : 'js',
+        paths: {
+            bootstrap: 'lib/bootstrap/js/bootstrap.min',
+            jquery: 'lib/jquery/jquery.min',
+            jqForm: 'lib/jquery.form',
+            jqmd5: 'lib/jquery.md5',
+            jqJson: 'lib/jquery.json-2.4',
+            jqExend : 'lib/jquery.extends' ,
+            validate: 'lib/jquery.validate.min',
+            config : 'config',
+            backstretch: 'lib/jquery.backstretch.min'    
+        },
+        shim: {
+            'backstretch': {deps: ['jquery']},
+            'bootstrap': {deps: ['jquery']},
+            'jqJson': { deps: ['jquery']},
+            'jqForm': {deps: ['jquery']},
+            'jqmd5': {deps: ['jquery']},
+            'jqExend': {deps: ['jquery','jqJson',]},
+            'validate': {deps: ['jquery']}
+        },
+        priority: [
+            'jquery'
+        ]
+    });
+
+    requirejs(['jquery',
+                'jqForm',
+                'jqJson',
+                'jqExend',
+                'jqmd5',
+                'validate',
+                'backstretch',
+                'config',
+                'bootstrap'
+           ], function ($) {
+                $.backstretch([
+                  "img/bg/1.jpg",
+                  "img/bg/2.jpg",
+                  "img/bg/3.jpg",
+                  "img/bg/4.jpg",
+                  "img/bg/5.jpg",
+                  "img/bg/6.jpg",
+                  ], {
+                    fade: 1000,
+                    duration: 2000
+                });
+                
+                $('#loginForm').validate({  
+                    errorElement : 'span',  
+                    errorClass : 'help-block',  
+                    focusInvalid : false,  
+                    rules : {  
+                        username : {  
+                            required : true  
+                        },  
+                        password : {  
+                            required : true  
+                        } 
+                    },  
+                    messages : {  
+                        username : {  
+                            required : "Username is required."  
+                        },  
+                        password : {  
+                            required : "Password is required."  
+                        } 
+                    },  
+          
+                    highlight : function(element) {  
+                        $(element).closest('.form-group').addClass('has-error');  
+                    },  
+          
+                    success : function(label) {  
+                        label.closest('.form-group').removeClass('has-error');  
+                        label.remove();  
+                    },  
+          
+                    errorPlacement : function(error, element) {  
+                        element.parent('div').append(error);  
+                    },  
+          
+                    submitHandler : function(form) {
+                        submitLogin();
+                    }  
+                });  
+          
+                $('#loginForm input').keypress(function(e) {  
+                    if (e.which == 13) {  
+                        if ($('#loginForm').validate().form()) {  
+                            submitLogin();
+                        }  
+                        return false;  
+                    }  
+                });
+
+                $('#btn_sign_in').click(function(e){
+                    if ($('#loginForm').validate().form()) {  
+                        submitLogin();
+                    }  
+                });
+
+
+
+                var submitLogin = function() {
+                  $("#loginForm :password").val($.md5($("#loginForm :password").val()));
+                  var data = $("#loginForm").serializeObject();
+                  $.ajax({
+                      type: 'post', 
+                      dataType: "json",
+                      url: config.oauthUrl + '/login',
+                      contentType: "application/json; charset=utf-8",
+                      data: JSON.stringify(data) ,
+                      success: function(res) {
+                          if (res.result === true) {
+                            var loginData = $.parseJSON(res.data);
+                            document.cookie="name=" + loginData.username;
+                            document.cookie="role=" + loginData.role;
+                            document.cookie="uuid=" + loginData.uuid;
+                            $("#login-box-msg").html('login succeed . forwarding.');
+                            window.location.href="index.html";
+                          } else {
+                            $("#login-box-msg").html(res.message);
+                          }
+                      } ,
+                      error : function(res) {
+                        alert('登录失败!');
+                      }
+                      //$(this).resetForm(); // 提交后重置表单
+                  }); 
+                }
+
+           });
+
+    </script>
+  </body>
+</html>

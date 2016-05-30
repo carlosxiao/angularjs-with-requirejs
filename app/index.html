@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>DevOps</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <base href="/"/>
+    <!-- Bootstrap 3.3.4 -->
+    <link rel="stylesheet" href="js/lib/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <!-- Ionicons 2.0.0 -->
+    <link rel="stylesheet" href="css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="css/AdminLTE.min.css">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" href="css/_all-skins.min.css">
+    <!-- Morris chart -->
+    <link rel="stylesheet" href="js/lib/morris/morris.css">
+    <!-- jvectormap -->
+    <link rel="stylesheet" href="js/lib/jvectormap/jquery-jvectormap-1.2.2.css">
+    <!-- Date Picker -->
+    <link rel="stylesheet" href="js/lib/datepicker/datepicker3.css">
+    <!-- Daterange picker -->
+    <link rel="stylesheet" href="js/lib/daterangepicker/daterangepicker-bs3.css">
+    <!-- bootstrap wysihtml5 - text editor -->
+    <link rel="stylesheet" href="js/lib/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
+    <!-- dialog -->
+    <link rel="stylesheet" href="js/lib/angular-dialog-service/dist/dialogs.min.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="lib/html5shiv.min.js"></script>
+        <script src="lib/respond.min.js"></script>
+    <![endif]-->
+  </head>
+<body class="skin-blue sidebar-mini">
+    <div class="wrapper" ng-controller="IndexCtrl">
+      <header class="main-header">
+        <!-- Logo -->
+        <a href="javascript:;" class="logo">
+          <!-- mini logo for sidebar mini 50x50 pixels -->
+          <span class="logo-mini"><b>O</b>PS</span>
+          <!-- logo for regular state and mobile devices -->
+          <span class="logo-lg"><b>Dev</b>Ops</span>
+        </a>
+        <!-- Header Navbar: style can be found in header.less -->
+        <nav class="navbar navbar-static-top" role="navigation">
+          <!-- Sidebar toggle button-->
+          <a href="javascript:;" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+            <span class="sr-only">Toggle navigation</span>
+          </a>
+          <div class="navbar-custom-menu">
+            <ul class="nav navbar-nav">
+              <!-- Messages: style can be found in dropdown.less-->
+              <li class="dropdown messages-menu">
+                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
+                  <i class="fa fa-envelope-o"></i>
+                  <span class="label label-success">4</span>
+                </a>
+              </li>
+              <!-- Notifications: style can be found in dropdown.less -->
+              <li class="dropdown notifications-menu">
+                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
+                  <i class="fa fa-bell-o"></i>
+                  <span class="label label-warning">10</span>
+                </a>
+              </li>
+              <!-- Tasks: style can be found in dropdown.less -->
+              <li class="dropdown tasks-menu">
+                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
+                  <i class="fa fa-flag-o"></i>
+                  <span class="label label-danger">9</span>
+                </a>
+              </li>
+              <!-- User Account: style can be found in dropdown.less -->
+              <li class="dropdown user user-menu">
+                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
+                  <img src="img/user2-160x160.jpg" class="user-image" alt="User Image">
+                  <span class="hidden-xs">{{username}}-{{role}}</span>
+                </a>
+              </li>
+              <!-- Control Sidebar Toggle Button -->
+              <li>
+                <a href="javascript:;"  ng-click="logout()">退出</a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </header>
+      <!-- Left side column. contains the logo and sidebar -->
+      <aside class="main-sidebar">
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+          <!-- Sidebar user panel -->
+          <div class="user-panel">
+            <div class="pull-left image">
+              <img src="img/user2-160x160.jpg" class="img-circle" alt="User Image">
+            </div>
+            <div class="pull-left info">
+              <p>{{username}}</p>
+              <a href="javascript:;"><i class="fa fa-circle text-success"></i> Online</a>
+            </div>
+          </div>
+          <!-- search form -->
+          <form action="#" method="get" class="sidebar-form">
+            <div class="input-group">
+              <input type="text" name="q" class="form-control" placeholder="Search...">
+              <span class="input-group-btn">
+                <button type="submit" ng-model="search.name" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i></button>
+              </span>
+            </div>
+          </form>
+          <!-- /.search form -->
+          <!-- sidebar menu: : style can be found in sidebar.less -->
+          <ul class="sidebar-menu">
+            <li class="header">Main Navigation</li>
+
+            <li class="treeview" ng-repeat="menu in menuList | filter:search">
+              <a href="{{menu.uri}}" ng-if="!menu.subMenu || menu.subMenu.length <= 0">
+                <i class="{{menu.icon}}"></i> <span>{{menu.menu}}</span>
+              </a>
+
+              <a href="javascript:;" ng-if="menu.subMenu.length > 0">
+                <i class="{{menu.icon}}"></i> <span>{{menu.menu}}</span>
+                <i class="fa fa-angle-left pull-right"></i>
+              </a>
+
+
+              <ul class="treeview-menu" ng-if="menu.subMenu.length > 0">
+                <li ng-if="!subMenu.subMenu || subMenu.subMenu.length <= 0">
+                  <a href="{{subMenu.uri}}"><i class="{{subMenu.icon}}"></i> {{subMenu.menu}}</a>
+                </li>
+                <li ng-repeat="subMenu in menu.subMenu">
+                  <a href="{{subMenu.uri}}"><i class="{{subMenu.icon}}"></i> {{subMenu.menu}} <i class="fa fa-angle-left pull-right" ng-if="subMenu.subMenu.length > 0"></i></a>
+                  <ul class="treeview-menu" ng-repeat="subSubMenu in subMenu.subMenu">
+                    <li><a href="{{subSubMenu.uri}}"><i class="{{subSubMenu.icon}}"></i> {{subSubMenu.menu}}</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+        <!-- /.sidebar -->
+      </aside>
+      <div class="content-wrapper" style="min-height: 916px;">  
+        <div ui-view=''></div>
+      </div>
+
+      <footer class="main-footer">
+        <div class="pull-right hidden-xs">
+          <b>Version</b> 3.0.0
+        </div>
+        <strong>Copyright &copy; 2014-2016 <a href="javascript:;">金联所</a>.</strong> All rights reserved.
+      </footer>
+
+      <!-- Add the sidebar's background. This div must be placed
+           immediately after the control sidebar -->
+      <div class="control-sidebar-bg"></div>
+    </div><!-- ./wrapper -->
+    <script data-main="/js/main.js" src="/js/lib/requirejs/require.js"></script>
+  </body>
+</html>
