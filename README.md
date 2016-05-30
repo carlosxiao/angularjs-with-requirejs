@@ -1,4 +1,4 @@
-DevOps前端项目
+angularjs lazy loading with requirejs
 =====================
 
 
