@@ -1,0 +1,2 @@
+# angularjs-with-requirejs
+ init
